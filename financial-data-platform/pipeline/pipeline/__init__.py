@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 
+import pipeline.project_env  # noqa: F401  # load monorepo `.env` before config reads
+
 from dagster import Definitions
 
 from pipeline.assets import ALL_ASSET_CHECKS, ALL_ASSETS

@@ -18,11 +18,10 @@ Dagster package for the financial data platform.
 ## Running
 
 ```bash
+cd ..
 poetry install
-export POSTGRES_PASSWORD=postgres
-export CLIENT_A_ORACLE_PASSWORD=local-dev-password
-export SOURCE_SQLITE_PATH=../seed_data/financial_data.sqlite
-dagster dev -w workspace.yaml
+cp .env.example .env
+poetry run dagster dev -w pipeline/workspace.yaml
 ```
 
 The package is loaded from `workspace.yaml` via `python_module: pipeline`.

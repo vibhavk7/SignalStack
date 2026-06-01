@@ -56,7 +56,17 @@ A complete local data platform for a fictional financial services client. The re
    docker compose up -d postgres
    ```
 
-4. Export local credentials used by the client config and Dagster resources:
+4. Configure local credentials (choose one):
+
+   **Option A — `.env` file (recommended for local dev)**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Variables are loaded automatically from `financial-data-platform/.env` when you run tests or Dagster. Shell exports and CI secrets still override `.env` values if both are set.
+
+   **Option B — shell exports**
 
    ```bash
    export POSTGRES_PASSWORD=postgres
@@ -72,11 +82,10 @@ A complete local data platform for a fictional financial services client. The re
    poetry run pytest
    ```
 
-6. Launch Dagster:
+6. Launch Dagster (from the monorepo root so Poetry uses the root virtualenv):
 
    ```bash
-   cd pipeline
-   poetry run dagster dev -w workspace.yaml
+   poetry run dagster dev -w pipeline/workspace.yaml
    ```
 
 7. Materialize all assets in the Dagster UI, or run the daily schedule. The schedule is configured for `06:00 UTC`.
