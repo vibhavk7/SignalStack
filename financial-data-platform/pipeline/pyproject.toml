@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "financial-pipeline"
+version = "1.0.0"
+description = "Dagster pipeline for a local financial data platform."
+authors = ["Financial Data Platform Team <data@example.com>"]
+readme = "README.md"
+packages = [{include = "pipeline"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+connectors = {path = "../connectors", develop = true}
+dagster = "^1.8.13"
+pandas = "^2.2.2"
+sqlalchemy = "^2.0.32"
+pydantic = "^2.8.2"
+pydantic-settings = "^2.4.0"
+pyyaml = "^6.0.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+
+[build-system]
+requires = ["poetry-core>=1.8.3"]
+build-backend = "poetry.core.masonry.api"

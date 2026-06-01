@@ -1,0 +1,10 @@
+storage:
+  sqlite:
+    base_dir: .dagster/storage
+
+run_launcher:
+  module: dagster
+  class: DefaultRunLauncher
+
+telemetry:
+  enabled: false

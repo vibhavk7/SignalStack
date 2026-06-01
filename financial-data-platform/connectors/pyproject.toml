@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "connectors"
+version = "1.0.0"
+description = "Reusable database connector package for the financial data platform."
+authors = ["Financial Data Platform Team <data@example.com>"]
+readme = "README.md"
+packages = [{include = "connectors"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^2.2.2"
+sqlalchemy = "^2.0.32"
+psycopg2-binary = "^2.9.9"
+pydantic = "^2.8.2"
+pydantic-settings = "^2.4.0"
+
+[build-system]
+requires = ["poetry-core>=1.8.3"]
+build-backend = "poetry.core.masonry.api"

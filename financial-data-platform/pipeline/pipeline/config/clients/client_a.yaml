@@ -1,0 +1,20 @@
+client_id: client_a
+oracle:
+  host: localhost
+  port: 1521
+  service_name: ORCLCDB
+  username: client_a_user
+  password: ${CLIENT_A_ORACLE_PASSWORD}
+postgres:
+  host: localhost
+  port: 5432
+  database: financial_platform
+  username: postgres
+  password: ${POSTGRES_PASSWORD}
+pipelines:
+  enabled: [customer_accounts, transactions, risk_flags, monthly_summaries]
+schedules:
+  ingestion_cron: "0 6 * * *"
+feature_flags:
+  enable_risk_gold: true
+  enable_analytics_gold: true
