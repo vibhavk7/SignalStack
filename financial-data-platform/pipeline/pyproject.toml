@@ -3,7 +3,6 @@ name = "financial-pipeline"
 version = "1.0.0"
 description = "Dagster pipeline for a local financial data platform."
 authors = ["Financial Data Platform Team <data@example.com>"]
-readme = "README.md"
 packages = [{include = "pipeline"}]
 
 [tool.poetry.dependencies]

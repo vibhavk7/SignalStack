@@ -3,7 +3,6 @@ name = "financial-data-platform"
 version = "1.0.0"
 description = "Local Bronze/Silver/Gold financial data platform orchestrated with Dagster."
 authors = ["Financial Data Platform Team <data@example.com>"]
-readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]

@@ -3,7 +3,6 @@ name = "connectors"
 version = "1.0.0"
 description = "Reusable database connector package for the financial data platform."
 authors = ["Financial Data Platform Team <data@example.com>"]
-readme = "README.md"
 packages = [{include = "connectors"}]
 
 [tool.poetry.dependencies]
