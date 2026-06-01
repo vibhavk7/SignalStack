@@ -17,11 +17,15 @@ Dagster package for the financial data platform.
 
 ## Running
 
+All commands run from the monorepo root (`financial-data-platform/`), not from this folder:
+
 ```bash
-cd ..
+cd ~/SignalStack/financial-data-platform
 poetry install
 cp .env.example .env
 poetry run dagster dev -w pipeline/workspace.yaml
 ```
+
+See the main [README](../README.md) for the full setup guide.
 
 The package is loaded from `workspace.yaml` via `python_module: pipeline`.

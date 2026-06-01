@@ -35,28 +35,41 @@ A complete local data platform for a fictional financial services client. The re
                          +-------------------------+          +----------------------+
 ```
 
+## Prerequisites
+
+- **Python** 3.11 or 3.12
+- **[Poetry](https://python-poetry.org/docs/#installation)** for dependency management
+- **Docker** (for local Postgres)
+
+## Where To Run Commands
+
+This folder (`financial-data-platform/`) is the **working directory** for every setup command below.
+
+| Path | Purpose |
+|------|---------|
+| `financial-data-platform/` | Poetry, Docker, `.env`, tests, and Dagster (`poetry run …`) |
+| `financial-data-platform/pipeline/` | Dagster code and `workspace.yaml` — do **not** `cd` here to run Poetry or `dagster dev` |
+| `financial-data-platform/connectors/` | Connector library (installed via root `poetry install`) |
+
+From a fresh clone of the `SignalStack` repo:
+
+```bash
+cd financial-data-platform   # or: cd ~/SignalStack/financial-data-platform
+```
+
+If your shell prompt already shows `financial-data-platform`, you are in the right place — skip the `cd`.
+
+Relative paths such as `seed_data/financial_data.sqlite` and `pipeline/workspace.yaml` are resolved from this directory.
+
 ## Local Setup
 
 1. Install dependencies:
 
    ```bash
-   cd financial-data-platform
    poetry install
    ```
 
-2. Generate the SQLite source database:
-
-   ```bash
-   poetry run python seed_data/generate_sqlite.py
-   ```
-
-3. Start Postgres:
-
-   ```bash
-   docker compose up -d postgres
-   ```
-
-4. Configure local credentials (choose one):
+2. Configure local credentials (choose one):
 
    **Option A — `.env` file (recommended for local dev)**
 
@@ -64,7 +77,7 @@ A complete local data platform for a fictional financial services client. The re
    cp .env.example .env
    ```
 
-   Variables are loaded automatically from `financial-data-platform/.env` when you run tests or Dagster. Shell exports and CI secrets still override `.env` values if both are set.
+   Variables are loaded automatically from `.env` in this directory when you run tests or Dagster. Shell exports and CI secrets still override `.env` values if both are set.
 
    **Option B — shell exports**
 
@@ -76,27 +89,66 @@ A complete local data platform for a fictional financial services client. The re
    export SOURCE_SQLITE_PATH=seed_data/financial_data.sqlite
    ```
 
+3. Generate the SQLite source database:
+
+   ```bash
+   poetry run python seed_data/generate_sqlite.py
+   ```
+
+   Creates `seed_data/financial_data.sqlite` (gitignored; regenerate after clone).
+
+4. Start Postgres:
+
+   ```bash
+   docker compose up -d postgres
+   ```
+
+   Optional: `docker compose ps` or `docker compose logs -f postgres`
+
 5. Run the tests:
 
    ```bash
    poetry run pytest
    ```
 
-6. Launch Dagster (from the monorepo root so Poetry uses the root virtualenv):
+6. Launch Dagster:
 
    ```bash
    poetry run dagster dev -w pipeline/workspace.yaml
    ```
 
+   Run from `financial-data-platform/` so Poetry uses the root virtualenv (which includes `dagster` and `dagster-webserver`). Open the URL printed in the terminal (usually `http://127.0.0.1:3000`).
+
 7. Materialize all assets in the Dagster UI, or run the daily schedule. The schedule is configured for `06:00 UTC`.
+
+### Quick start (copy-paste)
+
+```bash
+cd ~/SignalStack/financial-data-platform
+poetry install
+cp .env.example .env
+poetry run python seed_data/generate_sqlite.py
+docker compose up -d postgres
+poetry run pytest
+poetry run dagster dev -w pipeline/workspace.yaml
+```
+
+### Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| `cd financial-data-platform/pipeline` then `poetry run dagster …` | Stay in `financial-data-platform/`; use `-w pipeline/workspace.yaml` |
+| `cd pipeline` and `poetry run dagster` | Poetry may use the `pipeline/` subproject and report `Command not found: dagster` |
+| `cd financial-data-platform` when already inside it | Skip the extra `cd`; run commands in the current directory |
+| Committing `.env`, `*.sqlite`, or `__pycache__/` | These are gitignored; use `.env.example` as the template |
 
 ## Adding A New Client
 
 1. Create `pipeline/pipeline/config/clients/<client_id>.yaml`.
 2. Match the structure in `client_a.yaml`, including Oracle, Postgres, enabled pipeline names, schedule, and feature flags.
 3. Use `${ENV_VAR}` references for secrets rather than committing secret values.
-4. Set `CLIENT_ID=<client_id>` before loading config-dependent tooling.
-5. Set the corresponding environment variables before running Dagster.
+4. Set `CLIENT_ID=<client_id>` in `.env` (or `export CLIENT_ID=<client_id>`).
+5. Add any new secret variables referenced in the YAML to `.env` or your shell environment before running Dagster.
 
 The `ClientConfig` Pydantic model validates required fields and resolves environment variable references.
 
